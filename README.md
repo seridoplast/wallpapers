@@ -1,90 +1,122 @@
-# Seridóplast Wallpaper Studio
+<div align="center">
+  <img src="assets/seridoplast-symbol.png" width="92" alt="Símbolo da Seridóplast">
+  <h1>Seridóplast Wallpaper Studio</h1>
+  <p><strong>Wallpapers corporativos personalizados em poucos cliques.</strong></p>
+  <p>Uma ferramenta simples para criar fundos de tela com <strong>nome e setor</strong>, seguindo a identidade visual da Seridóplast.</p>
+  <p>
+    <img src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-sem%20framework-ffd21a?style=flat-square&labelColor=292c30" alt="HTML CSS JavaScript">
+    <img src="https://img.shields.io/badge/GitHub%20Pages-publica%C3%A7%C3%A3o%20autom%C3%A1tica-ffffff?style=flat-square&labelColor=292c30" alt="GitHub Pages">
+    <img src="https://img.shields.io/badge/PNG-at%C3%A9%204K-ffd21a?style=flat-square&labelColor=292c30" alt="Exportação PNG até 4K">
+  </p>
+  <p><a href="https://seridoplast.github.io/wallpapers/"><strong>🌐 Abrir o Wallpaper Studio</strong></a></p>
+</div>
 
-Sistema web para gerar wallpapers corporativos com **nome e cargo**, usando os fundos institucionais da Seridóplast. Funciona no **GitHub Pages sem servidor, banco de dados ou etapa de build**.
+---
 
-## Recursos
+## ✨ Prévia do wallpaper
 
-- Nome e cargo personalizáveis, com visualização em tempo real.
-- Tema institucional criado a partir da imagem original fornecida, mais duas variações de cores de texto.
-- Exportação PNG em Full HD, Quad HD, 2048 × 1152, 1366 × 768 ou 4K.
-- Ajuste automático de textos longos (tamanho e quebra em linhas).
-- Área administrativa com autorização **real de escrita do GitHub**, sem senha fixa no código.
-- Upload de novas imagens e configuração de estilo, posição, alinhamento e tamanhos dos textos.
-- Publicação direto no repositório através da API GitHub (o Pages atualiza após o commit).
-- Interface responsiva. Não usa dependências JavaScript externas.
+<div align="center">
+  <img src="assets/readme-preview.jpg" alt="Exemplo de wallpaper Seridóplast com setor Comercial e nome Ana Silva" width="900">
+  <sub>Exemplo ilustrativo. A pré-visualização real e o download são gerados pelo navegador.</sub>
+</div>
 
-## Como colocar no GitHub Pages
+## O que você consegue fazer
 
-**Forma mais simples:**
+| Para colaboradores | Para gestores |
+| :--- | :--- |
+| Informar **nome e setor** | Criar, editar e remover temas |
+| Visualizar alterações imediatamente | Enviar novos fundos (PNG/JPG/WebP) |
+| Escolher entre três estilos iniciais | Ajustar posição, alinhamento, tamanho e cor dos textos |
+| Exportar PNG em Full HD, 2K, 4K e mais | Publicar temas no repositório pelo painel |
+| Usar no desktop, notebook ou celular | Administrar com autorização de escrita do GitHub |
 
-1. Crie um repositório no GitHub (exemplo: `seridoplast-wallpapers`).
-2. Extraia o ZIP do projeto e envie **o conteúdo da pasta**, mantendo o arquivo `index.html` na raiz do repositório.
-3. Faça o commit na branch `main`.
-4. Em **Settings → Pages → Build and deployment → Source**, escolha **Deploy from a branch**.
-5. Selecione **main** e **/(root)**, depois **Save**.
-6. Seu site ficará no endereço `https://SEU-USUARIO.github.io/seridoplast-wallpapers/` (caso seja um repositório de projeto).
+**Identidade visual:** o site usa o símbolo oficial enviado para o cabeçalho e para o favicon. O fundo institucional mantém a arte original com a assinatura **“Acreditamos na força do trabalho!”**.
 
-Se preferir Git no terminal, na pasta extraída:
+## 🚀 Publicação automática no GitHub Pages
 
-```bash
-git init
+Este repositório já inclui o workflow **`.github/workflows/pages.yml`**. A cada `push` na branch `main`, o GitHub Actions valida o JavaScript e o JSON, prepara os arquivos estáticos e publica o site automaticamente.
+
+**Configuração única necessária no GitHub:**
+
+1. Abra o repositório **`seridoplast/wallpapers`**.
+2. Acesse **Settings → Pages**.
+3. Em **Build and deployment → Source**, escolha **GitHub Actions** (não *Deploy from a branch*).
+4. Volte à aba **Actions** e acompanhe o workflow **Publicar Wallpaper Studio no GitHub Pages**.
+5. Quando a execução estiver verde, acesse **https://seridoplast.github.io/wallpapers/**.
+
+> ⚠️ **Importante:** adicionar o workflow ao commit não altera automaticamente a configuração **Source** do repositório. É necessário selecionar **GitHub Actions** uma vez na interface do GitHub. Se o site não abrir, confirme também que o `git push` foi aceito e que os arquivos aparecem na branch `main`.
+
+### Atualizar o projeto existente (PowerShell)
+
+Na pasta `C:\Users\Usuario\Documents\REPOSITORIOS\wallpapers`, extraia o conteúdo do ZIP sobre os arquivos antigos, **preservando a pasta `.git` existente**. Não copie apenas a pasta do ZIP: o `index.html` precisa ficar na raiz do repositório.
+
+```powershell
 git add .
-git commit -m "Publica Wallpaper Studio Seridóplast"
-git branch -M main
-git remote add origin https://github.com/SEU-USUARIO/seridoplast-wallpapers.git
+git commit -m "feat: setor, logo e deploy automatico do wallpaper studio"
 git push -u origin main
 ```
 
-> Caso o repositório já tenha sido criado com README ou outro commit, sincronize seu histórico primeiro antes de usar `git push`.
+Não precisa criar outro repositório nem rodar `git init` novamente. Se aparecer **`Write access to repository not granted`**, resolva a autenticação/permissão do GitHub; nenhum arquivo do projeto corrige essa permissão.
 
-## Acesso administrativo e publicação de temas
+### Para testar localmente
 
-O site é estático, portanto **uma senha fixa dentro do JavaScript não ofereceria segurança**: qualquer visitante conseguiria visualizá-la. Para assegurar que **só você publique ou apague temas**, o painel usa um token temporário de acesso ao GitHub, com as permissões verificadas pelo GitHub.
-
-1. No GitHub, abra https://github.com/settings/personal-access-tokens e crie um **fine-grained personal access token**.
-2. Em **Repository access**, selecione **Only select repositories** e escolha exclusivamente o repositório do Wallpaper Studio.
-3. Em **Repository permissions**, conceda **Contents → Read and write**. Não dê permissões além das necessárias. Escolha um prazo de validade apropriado.
-4. No site, clique **Área do gestor**.
-5. Informe **usuário/organização**, **nome do repositório**, **branch** e o **token**.
-6. Clique **Conectar e editar temas**, depois **+ Novo tema** ou **Editar**.
-7. Faça upload do fundo e ajuste fontes, cores, largura e posição. Salve o rascunho.
-8. Clique **Publicar no GitHub**. A ferramenta enviará cada nova imagem a `assets/themes/` e atualizará `themes.json` por commits na branch configurada.
-
-**Segurança:** o token não fica guardado no projeto, nos arquivos publicados, nem no armazenamento local do navegador. Ele existe apenas na memória da aba durante a conexão. Ao sair ou recarregar a página, precisa ser informado novamente. Nunca compartilhe o token ou o coloque nos arquivos do site.
-
-**Importante:** o botão administrativo é público (qualquer pessoa pode vê-lo), mas publicar arquivos exige uma credencial GitHub com permissão de escrita no repositório. O site em si e os wallpapers publicados são públicos no GitHub Pages.
-
-## Trocar a arte inicial
-
-O fundo original está em `assets/wallpaper-base.png`, sem o nome e o cargo. Ele contém o logotipo oficial na própria imagem. Para criar um tema com imagem diferente, utilize uma arte **sem os textos dinâmicos**. O painel converte a imagem para WebP de 2048 × 1152 pixels. A imagem importada é redimensionada com corte central para 16:9 caso tenha outra proporção.
-
-Os três temas de exemplo têm o mesmo fundo, mas cores e tipografia diferentes. Eles podem ser editados pelo painel.
-
-## Estrutura
-
-```text
-index.html              página principal
-style.css               layout e responsividade
-app.js                  gerador, prévia e administração
-themes.json             temas publicados
-assets/wallpaper-base.png  fundo original sem cargo/nome
-assets/themes/          imagens dos novos temas
-```
-
-## Testar localmente
-
-Abra um terminal na pasta do projeto:
-
-```bash
+```powershell
 python -m http.server 8000
 ```
 
-Acesse `http://localhost:8000`. Não abra o arquivo por `file://`, pois alguns navegadores bloqueiam a leitura de `themes.json` nesse formato.
+Abra **http://localhost:8000**. Use um servidor local porque a leitura de `themes.json` pode ser bloqueada ao abrir o HTML por `file://`.
 
-## Observações
+## 🔐 Administração de temas
 
-- A publicação exige GitHub Pages habilitado e a branch do painel deve ser a **mesma branch** configurada no Pages.
-- Se outra pessoa editar `themes.json` após o login, a ferramenta interrompe a publicação para evitar sobrescrever alterações. Reconecte-se e revise os temas.
-- Se o upload de uma imagem funcionar, mas a publicação do manifesto falhar, uma imagem não utilizada poderá ficar em `assets/themes/`. Isso não muda os wallpapers publicados.
-- O site busca a fonte Poppins pelo Google Fonts e usa uma fonte substituta caso a rede esteja indisponível; a tipografia pode variar ligeiramente offline.
-- A qualidade do PNG 4K depende da resolução da arte de fundo (original: 2048 × 1152, portanto ela é ampliada na saída 4K).
+O botão **Área do gestor** fica no canto superior direito. O acesso usa um **Personal Access Token (fine-grained)** do GitHub, em vez de uma senha embutida no site público.
+
+1. Acesse [GitHub → Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens).
+2. Crie um token com acesso **somente** ao repositório `seridoplast/wallpapers`.
+3. Em **Repository permissions**, selecione **Contents → Read and write**.
+4. No site, abra **Área do gestor**. Os campos do repositório são preenchidos automaticamente quando o site está no GitHub Pages.
+5. Cole o token, conecte-se, crie/edite temas e clique em **Publicar no GitHub**.
+6. O painel cria commits na branch `main`; o workflow faz o deploy em seguida.
+
+**Segurança:** o token fica apenas na memória da aba durante a sessão; não é gravado em `localStorage` nem no repositório. Não compartilhe o token. O painel de login é visível para todos, mas **só quem possui permissão de escrita no repositório consegue publicar**. O site e os temas publicados são públicos.
+
+## 📁 Estrutura do projeto
+
+```text
+wallpapers/
+├── .github/workflows/pages.yml   # Deploy automático em cada push na main
+├── .gitattributes                 # Padronização de finais de linha
+├── .gitignore
+├── .nojekyll
+├── assets/
+│   ├── wallpaper-base.png         # Fundo institucional, sem textos dinâmicos
+│   ├── seridoplast-symbol.png     # Símbolo oficial original
+│   ├── favicon-64.png             # Favicon PNG
+│   ├── icon-192.png               # Ícone do site
+│   ├── icon-512.png               # Ícone do site
+│   ├── apple-touch-icon.png       # Ícone Apple
+│   ├── readme-preview.jpg         # Ilustração do README
+│   └── themes/                   # Novas imagens publicadas pelo painel
+├── favicon.ico
+├── index.html                     # Interface
+├── style.css                      # Layout responsivo
+├── app.js                         # Gerador e painel administrativo
+├── themes.json                    # Configuração dos temas
+└── README.md
+```
+
+## ⚙️ Detalhes técnicos
+
+- **100% estático:** sem servidor próprio, banco de dados ou dependências npm.
+- **Canvas API:** gera a prévia e o PNG no próprio navegador.
+- **Fontes:** Poppins via Google Fonts, com fallback local.
+- **Imagens de temas:** upload convertido para WebP 2048 × 1152 (corte central em outras proporções).
+- **Compatibilidade:** o leitor de temas aceita também campos antigos `roleColor`/`roleSize` e os converte para `sectorColor`/`sectorSize`.
+- **4K:** o PNG é exportado em 3840 × 2160, mas a arte original de 2048 × 1152 é ampliada; isso não cria novos detalhes.
+- **Atualização:** commits feitos pelo painel disparam o mesmo workflow de publicação.
+
+---
+
+<div align="center">
+  <strong>Seridóplast</strong><br>
+  Acreditamos na força do trabalho!
+</div>

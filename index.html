@@ -4,11 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#141517">
-  <meta name="description" content="Gere wallpapers profissionais personalizados da Seridóplast com seu nome e cargo.">
+  <meta name="description" content="Gere wallpapers profissionais personalizados da Seridóplast com seu nome e setor.">
   <title>Studio Wallpapers | Seridóplast</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
 </head>
@@ -16,7 +19,7 @@
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="./" aria-label="Seridóplast Studio, início">
-        <span class="brand-mark" aria-hidden="true">S<span>.</span></span>
+        <img class="brand-logo" src="assets/seridoplast-symbol.png" width="43" height="47" alt="" aria-hidden="true">
         <span class="brand-text"><strong>Seridó<span>plast</span></strong><small>WALLPAPER STUDIO</small></span>
       </a>
       <div class="topbar-actions">
@@ -39,7 +42,7 @@
         <aside class="settings-card" aria-label="Personalização do wallpaper">
           <div class="section-title"><span class="step-index">01</span><div><h2>Personalize</h2><p>Como você quer aparecer?</p></div></div>
           <div class="form-fields">
-            <label class="field"><span>Seu cargo</span><input id="roleInput" type="text" maxlength="100" value="Cargo" placeholder="Ex.: Analista Comercial" autocomplete="organization-title"><small>Ex.: Supervisor, Analista, Gerente...</small></label>
+            <label class="field"><span>Seu setor</span><input id="sectorInput" type="text" maxlength="100" value="Setor" placeholder="Ex.: Comercial" autocomplete="off"><small>Ex.: Comercial, Logística, Financeiro...</small></label>
             <label class="field"><span>Seu nome</span><input id="nameInput" type="text" maxlength="100" value="Nome pessoa" placeholder="Digite seu nome completo" autocomplete="name"></label>
           </div>
           <div class="inner-divider"></div>
@@ -54,9 +57,9 @@
 
         <section class="preview-section" aria-label="Pré-visualização do wallpaper">
           <div class="preview-topline"><div class="preview-heading"><span class="preview-light"></span><strong>Pré-visualização ao vivo</strong></div><span id="previewDimensions">2048 × 1152</span></div>
-          <div class="preview-stage"><div class="wallpaper-shadow"><canvas id="wallpaperCanvas" width="2048" height="1152" role="img" aria-label="Wallpaper com seu nome e cargo sobre a arte da Seridóplast"></canvas></div></div>
+          <div class="preview-stage"><div class="wallpaper-shadow"><canvas id="wallpaperCanvas" width="2048" height="1152" role="img" aria-label="Wallpaper com seu nome e setor sobre a arte da Seridóplast"></canvas></div></div>
           <div class="preview-bottom"><div><span class="preview-check">✓</span> <span>Visualização fiel à imagem exportada</span></div><button id="resetBtn" class="text-button" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg> Restaurar exemplo</button></div>
-          <div class="hint-card"><span class="sparkle-icon">✳</span><div><strong>Uma identidade, do seu jeito.</strong><p>Preencha seus dados, escolha um dos temas e salve. O nome e o cargo são ajustados automaticamente para não saírem da área de texto.</p></div></div>
+          <div class="hint-card"><span class="sparkle-icon">✳</span><div><strong>Uma identidade, do seu jeito.</strong><p>Preencha seus dados, escolha um dos temas e salve. O nome e o setor são ajustados automaticamente para não saírem da área de texto.</p></div></div>
         </section>
       </div>
     </main>
@@ -70,8 +73,8 @@
       <div id="adminLogin" class="modal-scroll">
         <div class="admin-notice"><strong>🔐 Acesso via GitHub</strong><p>Conecte-se usando um token do GitHub com permissão de escrita no seu repositório. Nenhuma senha ou token é salvo no navegador.</p></div>
         <div class="admin-form">
-          <label class="field"><span>Usuário ou organização do GitHub</span><input id="repoOwner" placeholder="seu-usuario" autocomplete="off" spellcheck="false"></label>
-          <label class="field"><span>Nome do repositório</span><input id="repoName" placeholder="seridoplast-wallpapers" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>Usuário ou organização do GitHub</span><input id="repoOwner" placeholder="seridoplast" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>Nome do repositório</span><input id="repoName" placeholder="wallpapers" autocomplete="off" spellcheck="false"></label>
           <label class="field"><span>Branch de publicação</span><input id="repoBranch" value="main" autocomplete="off" spellcheck="false"></label>
           <label class="field"><span>Token de acesso (fine-grained)</span><input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false"></label>
           <button class="solid-btn" id="connectGitHub" type="button">Conectar e editar temas</button>
@@ -89,19 +92,19 @@
             <label class="field"><span>Nome do tema</span><input id="editThemeName" maxlength="48" placeholder="Ex.: Natal corporativo"></label>
             <label class="field"><span>Descrição</span><input id="editThemeDescription" maxlength="90" placeholder="Ex.: Design de fim de ano"></label>
             <label class="field full"><span>Imagem de fundo (PNG, JPG ou WebP)</span><input type="file" id="editThemeImage" accept="image/png,image/jpeg,image/webp,image/avif" class="file-input"><small>A imagem será convertida para WebP em 2048 × 1152, idealmente em proporção 16:9. Para manter a logo original, utilize um fundo já com a marca.</small></label>
-            <label class="field"><span>Cor do cargo</span><input id="editRoleColor" type="color" value="#ffffff"></label>
+            <label class="field"><span>Cor do setor</span><input id="editSectorColor" type="color" value="#ffffff"></label>
             <label class="field"><span>Cor do nome</span><input id="editNameColor" type="color" value="#ffffff"></label>
-            <label class="field"><span>Tamanho do cargo</span><input id="editRoleSize" type="range" min="38" max="110" value="95"><small><span id="roleSizeVal">95</span> px (base 2048px)</small></label>
+            <label class="field"><span>Tamanho do setor</span><input id="editSectorSize" type="range" min="38" max="110" value="95"><small><span id="sectorSizeVal">95</span> px (base 2048px)</small></label>
             <label class="field"><span>Tamanho do nome</span><input id="editNameSize" type="range" min="30" max="88" value="65"><small><span id="nameSizeVal">65</span> px (base 2048px)</small></label>
             <label class="field"><span>Posição horizontal do texto</span><input id="editX" type="range" min="15" max="90" step="0.5" value="89.5"><small><span id="xVal">89.5</span>% da largura</small></label>
-            <label class="field"><span>Posição vertical do cargo</span><input id="editY" type="range" min="10" max="76" value="19"><small><span id="yVal">19</span>% da altura</small></label>
+            <label class="field"><span>Posição vertical do setor</span><input id="editY" type="range" min="10" max="76" value="19"><small><span id="yVal">19</span>% da altura</small></label>
             <label class="field"><span>Largura máxima do texto</span><input id="editMaxWidth" type="range" min="20" max="80" value="34"><small><span id="maxWidthVal">34</span>% da largura</small></label>
             <label class="field"><span>Alinhamento</span><select id="editAlign"><option value="center">Centralizado</option><option value="left">Esquerda</option><option value="right" selected>Direita</option></select></label>
           </div>
           <div class="editor-preview"><canvas id="adminPreview" width="800" height="450" aria-label="Prévia das configurações do tema"></canvas></div>
           <button class="solid-btn" id="saveThemeDraft" type="button">Salvar tema no painel</button>
         </div>
-        <div class="publish-row"><div><strong>Publicar alterações</strong><p>Atualiza themes.json e as novas imagens diretamente no GitHub Pages.</p></div><button class="solid-btn" id="publishThemes" type="button">Publicar no GitHub</button></div>
+        <div class="publish-row"><div><strong>Publicar alterações</strong><p>Cria commits no GitHub; o Pages publica automaticamente após o deploy.</p></div><button class="solid-btn" id="publishThemes" type="button">Publicar no GitHub</button></div>
       </div>
       <div id="adminMessage" class="admin-message" role="status" aria-live="polite"></div>
     </section>

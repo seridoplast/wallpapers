@@ -4,9 +4,9 @@
 // O token é mantido exclusivamente em memória, nunca em localStorage ou no repositório.
 const $ = id => document.getElementById(id);
 const DEFAULT_THEMES = [
-  {id:'institucional',name:'Institucional',description:'O visual original da Seridóplast',image:'assets/wallpaper-base.png',roleColor:'#ffffff',nameColor:'#ffffff',roleSize:95,nameSize:65,x:89.5,y:19,maxWidth:34,align:'right'}
+  {id:'institucional',name:'Institucional',description:'O visual original da Seridóplast',image:'assets/wallpaper-base.png',sectorColor:'#ffffff',nameColor:'#ffffff',sectorSize:95,nameSize:65,x:89.5,y:19,maxWidth:34,align:'right'}
 ];
-const LIMITS = {roleSize:[38,110],nameSize:[30,88],x:[15,90],y:[10,76],maxWidth:[20,80]};
+const LIMITS = {sectorSize:[38,110],nameSize:[30,88],x:[15,90],y:[10,76],maxWidth:[20,80]};
 const loadedImages = new Map();
 let themes = DEFAULT_THEMES.map(t=>({...t}));
 let selectedThemeId = themes[0].id;
@@ -30,8 +30,8 @@ function normalizeTheme(raw){
   return {
     id, name:String(raw.name||'Tema').slice(0,48),description:String(raw.description||'').slice(0,90),
     image:String(raw.image||'assets/wallpaper-base.png'),
-    roleColor:color(raw.roleColor,'#ffffff'),nameColor:color(raw.nameColor,'#ffffff'),
-    roleSize:clampNumber(raw.roleSize,38,110,95),nameSize:clampNumber(raw.nameSize,30,88,65),
+    sectorColor:color(raw.sectorColor??raw.roleColor,'#ffffff'),nameColor:color(raw.nameColor,'#ffffff'),
+    sectorSize:clampNumber(raw.sectorSize??raw.roleSize,38,110,95),nameSize:clampNumber(raw.nameSize,30,88,65),
     x:clampNumber(raw.x,15,90,89.5),y:clampNumber(raw.y,10,76,19),maxWidth:clampNumber(raw.maxWidth,20,80,34),
     align:['center','left','right'].includes(raw.align)?raw.align:'right'
   };
@@ -98,7 +98,7 @@ function fitText(ctx,text,size,weight,maxWidth,maxLines,scale){
   // A very long full name may require a third line rather than clipping letters.
   return {fontSize,lines};
 }
-async function renderWallpaper(canvas,theme,role,name){
+async function renderWallpaper(canvas,theme,sector,name){
   if(!theme)return;
   const ctx=canvas.getContext('2d',{alpha:false});
   const w=canvas.width,h=canvas.height,scale=w/2048;
@@ -107,21 +107,21 @@ async function renderWallpaper(canvas,theme,role,name){
   coverImage(ctx,img,w,h);
   const maxW=w*theme.maxWidth/100;
   const x=w*theme.x/100;
-  const roleText=(role||'Cargo').trim();
+  const sectorText=(sector||'Setor').trim();
   const nameText=(name||'Nome pessoa').trim();
-  const roleFit=fitText(ctx,roleText,theme.roleSize,600,maxW,2,scale);
+  const sectorFit=fitText(ctx,sectorText,theme.sectorSize,600,maxW,2,scale);
   const nameFit=fitText(ctx,nameText,theme.nameSize,300,maxW,2,scale);
-  const roleLineHeight=roleFit.fontSize*1.18;
+  const sectorLineHeight=sectorFit.fontSize*1.18;
   const nameLineHeight=nameFit.fontSize*1.29;
-  const roleBlockHeight=roleFit.lines.length*roleLineHeight;
-  const roleCenterY=h*theme.y/100;
+  const sectorBlockHeight=sectorFit.lines.length*sectorLineHeight;
+  const sectorCenterY=h*theme.y/100;
   ctx.textAlign=theme.align;
   ctx.textBaseline='middle';
   ctx.shadowColor='rgba(0,0,0,.20)';ctx.shadowBlur=3*scale;ctx.shadowOffsetY=1.3*scale;
-  ctx.fillStyle=theme.roleColor;ctx.font=`600 ${roleFit.fontSize}px Poppins, Arial, sans-serif`;
-  roleFit.lines.forEach((line,index)=>ctx.fillText(line,x,roleCenterY-roleBlockHeight/2+roleLineHeight*(index+.5),maxW));
+  ctx.fillStyle=theme.sectorColor;ctx.font=`600 ${sectorFit.fontSize}px Poppins, Arial, sans-serif`;
+  sectorFit.lines.forEach((line,index)=>ctx.fillText(line,x,sectorCenterY-sectorBlockHeight/2+sectorLineHeight*(index+.5),maxW));
   ctx.fillStyle=theme.nameColor;ctx.font=`300 ${nameFit.fontSize}px Poppins, Arial, sans-serif`;
-  const nameTop=roleCenterY+roleBlockHeight/2+h*.018;
+  const nameTop=sectorCenterY+sectorBlockHeight/2+h*.018;
   nameFit.lines.forEach((line,index)=>ctx.fillText(line,x,nameTop+nameLineHeight*(index+.5),maxW));
   ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
 }
@@ -135,7 +135,7 @@ async function updatePreview(){
     if(nonce!==previewNonce)return;
     const canvas=$('wallpaperCanvas');
     // One render per state change; guard against fast theme switching.
-    await renderWallpaper(canvas,theme,$('roleInput').value,$('nameInput').value);
+    await renderWallpaper(canvas,theme,$('sectorInput').value,$('nameInput').value);
     $('previewDimensions').textContent=`${source.naturalWidth} × ${source.naturalHeight} · Visualização`;
   }catch(e){notify(e.message);console.error(e);}
 }
@@ -170,7 +170,7 @@ async function downloadWallpaper(){
   try{
     const [w,h]=$('resolutionSelect').value.split('x').map(Number);
     const c=document.createElement('canvas');c.width=w;c.height=h;
-    await ensureFonts();await renderWallpaper(c,getSelectedTheme(),$('roleInput').value,$('nameInput').value);
+    await ensureFonts();await renderWallpaper(c,getSelectedTheme(),$('sectorInput').value,$('nameInput').value);
     const blob=await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('Não foi possível gerar o arquivo.')),'image/png'));
     const url=URL.createObjectURL(blob);
     const cleanName=($('nameInput').value||'wallpaper').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase().slice(0,50)||'wallpaper';
@@ -282,15 +282,15 @@ function defaultNewTheme(){
 function setEditFields(theme){
   $('editThemeName').value=theme.name;
   $('editThemeDescription').value=theme.description;
-  $('editRoleColor').value=theme.roleColor;
+  $('editSectorColor').value=theme.sectorColor;
   $('editNameColor').value=theme.nameColor;
   $('editAlign').value=theme.align;
-  for(const [field,key] of [['editRoleSize','roleSize'],['editNameSize','nameSize'],['editX','x'],['editY','y'],['editMaxWidth','maxWidth']])$(field).value=theme[key];
+  for(const [field,key] of [['editSectorSize','sectorSize'],['editNameSize','nameSize'],['editX','x'],['editY','y'],['editMaxWidth','maxWidth']])$(field).value=theme[key];
   $('editThemeImage').value='';
   updateSliderLabels();
 }
 function updateSliderLabels(){
-  for(const [field,out] of [['editRoleSize','roleSizeVal'],['editNameSize','nameSizeVal'],['editX','xVal'],['editY','yVal'],['editMaxWidth','maxWidthVal']])$(out).textContent=$(field).value;
+  for(const [field,out] of [['editSectorSize','sectorSizeVal'],['editNameSize','nameSizeVal'],['editX','xVal'],['editY','yVal'],['editMaxWidth','maxWidthVal']])$(out).textContent=$(field).value;
 }
 function startThemeEdit(id=null){
   editingId=id;
@@ -309,8 +309,8 @@ function editorTheme(){
   if(!prior)return defaultNewTheme();
   return {
     ...prior,name:$('editThemeName').value.trim(),description:$('editThemeDescription').value.trim(),
-    roleColor:$('editRoleColor').value,nameColor:$('editNameColor').value,
-    roleSize:Number($('editRoleSize').value),nameSize:Number($('editNameSize').value),
+    sectorColor:$('editSectorColor').value,nameColor:$('editNameColor').value,
+    sectorSize:Number($('editSectorSize').value),nameSize:Number($('editNameSize').value),
     x:Number($('editX').value),y:Number($('editY').value),maxWidth:Number($('editMaxWidth').value),
     align:$('editAlign').value,
     ...(uploadedImageData?{imageData:uploadedImageData}:{})
@@ -323,7 +323,7 @@ async function renderAdminPreview(){
   try{
     await ensureFonts();
     if(nonce!==editPreviewNonce)return;
-    await renderWallpaper($('adminPreview'),theme,$('roleInput').value,$('nameInput').value);
+    await renderWallpaper($('adminPreview'),theme,$('sectorInput').value,$('nameInput').value);
   }catch(e){setAdminMessage(e.message,'error');}
 }
 async function convertImageToWebp(file){
@@ -400,11 +400,24 @@ async function publishThemes(){
   finally{buttonBusy(btn,false);}
 }
 
+function prefillRepository(){
+  const host=window.location.hostname;
+  const match=host.match(/^([a-z0-9-]+)\.github\.io$/i);
+  if(match){
+    $('repoOwner').value=match[1];
+    const project=window.location.pathname.split('/').filter(Boolean)[0];
+    $('repoName').value=project||`${match[1]}.github.io`;
+  }else{
+    $('repoOwner').value='seridoplast';
+    $('repoName').value='wallpapers';
+  }
+}
 function setupListeners(){
+  prefillRepository();
   $('year').textContent=String(new Date().getFullYear());
-  for(const id of ['nameInput','roleInput'])$(id).addEventListener('input',updatePreview);
+  for(const id of ['nameInput','sectorInput'])$(id).addEventListener('input',updatePreview);
   $('downloadBtn').addEventListener('click',downloadWallpaper);
-  $('resetBtn').addEventListener('click',()=>{$('roleInput').value='Cargo';$('nameInput').value='Nome pessoa';selectedThemeId=themes[0].id;refreshThemeList();updatePreview();notify('Exemplo restaurado.');});
+  $('resetBtn').addEventListener('click',()=>{$('sectorInput').value='Setor';$('nameInput').value='Nome pessoa';selectedThemeId=themes[0].id;refreshThemeList();updatePreview();notify('Exemplo restaurado.');});
   $('openAdmin').addEventListener('click',openAdmin);
   $('closeAdmin').addEventListener('click',closeAdmin);
   $('adminModal').addEventListener('click',e=>{if(e.target===$('adminModal'))closeAdmin();});
@@ -416,7 +429,7 @@ function setupListeners(){
   $('editThemeImage').addEventListener('change',onThemeImageUpload);
   $('saveThemeDraft').addEventListener('click',saveThemeDraft);
   $('publishThemes').addEventListener('click',publishThemes);
-  for(const id of ['editRoleColor','editNameColor','editRoleSize','editNameSize','editX','editY','editMaxWidth','editAlign','editThemeName','editThemeDescription']){
+  for(const id of ['editSectorColor','editNameColor','editSectorSize','editNameSize','editX','editY','editMaxWidth','editAlign','editThemeName','editThemeDescription']){
     $(id).addEventListener('input',()=>{updateSliderLabels();renderAdminPreview();});
   }
 }
