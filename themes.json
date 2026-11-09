@@ -23,9 +23,9 @@
       "sectorColor": "#ffffff",
       "nameColor": "#ffffff",
       "sectorSize": 90,
-      "nameSize": 57,
-      "x": 88.5,
-      "y": 26,
+      "nameSize": 56,
+      "x": 89.5,
+      "y": 27,
       "maxWidth": 80,
       "align": "right"
     }
