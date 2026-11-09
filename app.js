@@ -4,9 +4,9 @@
 // O token é mantido exclusivamente em memória, nunca em localStorage ou no repositório.
 const $ = id => document.getElementById(id);
 const DEFAULT_THEMES = [
-  {id:'institucional',name:'Institucional',description:'O visual original da Seridóplast',image:'assets/wallpaper-base.png',sectorColor:'#ffffff',nameColor:'#ffffff',sectorSize:95,nameSize:65,x:89.5,y:19,maxWidth:34,align:'right'}
+  {id:'institucional',name:'Institucional',description:'O visual original da Seridóplast',image:'assets/wallpaper-base.png',sectorColor:'#ffffff',nameColor:'#ffffff',sectorSize:95,nameSize:65,x:89.5,y:19,maxWidth:34,textGap:1.8,align:'right'}
 ];
-const LIMITS = {sectorSize:[38,110],nameSize:[30,88],x:[15,90],y:[10,76],maxWidth:[20,80]};
+const LIMITS = {sectorSize:[38,110],nameSize:[30,88],x:[15,90],y:[10,76],maxWidth:[20,80],textGap:[0,10]};
 const loadedImages = new Map();
 let themes = DEFAULT_THEMES.map(t=>({...t}));
 let selectedThemeId = themes[0].id;
@@ -25,11 +25,17 @@ function userTheme(theme){
   return {...theme,
     sectorSize:theme.sectorSize*Number($('userSectorSize').value)/100,
     nameSize:theme.nameSize*Number($('userNameSize').value)/100,
-    maxWidth:Number($('userMaxWidth').value)};
+    maxWidth:Number($('userMaxWidth').value),
+    textGap:Number($('userTextGap').value)};
 }
 function syncTextControls(reset=false){
-  if(reset){$('userSectorSize').value=100;$('userNameSize').value=100;$('userMaxWidth').value=getSelectedTheme().maxWidth;}
-  for(const [id,label] of [['userSectorSize','userSectorSizeVal'],['userNameSize','userNameSizeVal'],['userMaxWidth','userMaxWidthVal']])$(label).textContent=$(id).value;
+  if(reset){
+    $('userSectorSize').value=100;
+    $('userNameSize').value=100;
+    $('userMaxWidth').value=getSelectedTheme().maxWidth;
+    $('userTextGap').value=getSelectedTheme().textGap ?? 1.8;
+  }
+  for(const [id,label] of [['userSectorSize','userSectorSizeVal'],['userNameSize','userNameSizeVal'],['userMaxWidth','userMaxWidthVal'],['userTextGap','userTextGapVal']])$(label).textContent=$(id).value;
 }
 const imgUrl = theme => theme?.imageData || theme?.image || 'assets/wallpaper-base.png';
 function normalizeTheme(raw){
@@ -43,6 +49,7 @@ function normalizeTheme(raw){
     sectorColor:color(raw.sectorColor??raw.roleColor,'#ffffff'),nameColor:color(raw.nameColor,'#ffffff'),
     sectorSize:clampNumber(raw.sectorSize??raw.roleSize,38,110,95),nameSize:clampNumber(raw.nameSize,30,88,65),
     x:clampNumber(raw.x,15,90,89.5),y:clampNumber(raw.y,10,76,19),maxWidth:clampNumber(raw.maxWidth,20,80,34),
+    textGap:clampNumber(raw.textGap,...LIMITS.textGap,1.8),
     align:['center','left','right'].includes(raw.align)?raw.align:'right'
   };
 }
@@ -131,7 +138,10 @@ async function renderWallpaper(canvas,theme,sector,name){
   ctx.fillStyle=theme.sectorColor;ctx.font=`600 ${sectorFit.fontSize}px Poppins, Arial, sans-serif`;
   sectorFit.lines.forEach((line,index)=>ctx.fillText(line,x,sectorCenterY-sectorBlockHeight/2+sectorLineHeight*(index+.5),maxW));
   ctx.fillStyle=theme.nameColor;ctx.font=`300 ${nameFit.fontSize}px Poppins, Arial, sans-serif`;
-  const nameTop=sectorCenterY+sectorBlockHeight/2+h*.018;
+  // Espaçamento entre o bloco do setor e o do nome, em % da altura do wallpaper.
+  // 1,8% reproduz exatamente o espaçamento das versões anteriores.
+  const textGap=clampNumber(theme.textGap,...LIMITS.textGap,1.8);
+  const nameTop=sectorCenterY+sectorBlockHeight/2+h*textGap/100;
   nameFit.lines.forEach((line,index)=>ctx.fillText(line,x,nameTop+nameLineHeight*(index+.5),maxW));
   ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
 }
@@ -295,12 +305,12 @@ function setEditFields(theme){
   $('editSectorColor').value=theme.sectorColor;
   $('editNameColor').value=theme.nameColor;
   $('editAlign').value=theme.align;
-  for(const [field,key] of [['editSectorSize','sectorSize'],['editNameSize','nameSize'],['editX','x'],['editY','y'],['editMaxWidth','maxWidth']])$(field).value=theme[key];
+  for(const [field,key] of [['editSectorSize','sectorSize'],['editNameSize','nameSize'],['editX','x'],['editY','y'],['editMaxWidth','maxWidth'],['editTextGap','textGap']])$(field).value=theme[key];
   $('editThemeImage').value='';
   updateSliderLabels();
 }
 function updateSliderLabels(){
-  for(const [field,out] of [['editSectorSize','sectorSizeVal'],['editNameSize','nameSizeVal'],['editX','xVal'],['editY','yVal'],['editMaxWidth','maxWidthVal']])$(out).textContent=$(field).value;
+  for(const [field,out] of [['editSectorSize','sectorSizeVal'],['editNameSize','nameSizeVal'],['editX','xVal'],['editY','yVal'],['editMaxWidth','maxWidthVal'],['editTextGap','textGapVal']])$(out).textContent=$(field).value;
 }
 function startThemeEdit(id=null){
   editingId=id;
@@ -322,6 +332,7 @@ function editorTheme(){
     sectorColor:$('editSectorColor').value,nameColor:$('editNameColor').value,
     sectorSize:Number($('editSectorSize').value),nameSize:Number($('editNameSize').value),
     x:Number($('editX').value),y:Number($('editY').value),maxWidth:Number($('editMaxWidth').value),
+    textGap:Number($('editTextGap').value),
     align:$('editAlign').value,
     ...(uploadedImageData?{imageData:uploadedImageData}:{})
   };
@@ -426,7 +437,7 @@ function setupListeners(){
   prefillRepository();
   $('year').textContent=String(new Date().getFullYear());
   for(const id of ['nameInput','sectorInput'])$(id).addEventListener('input',updatePreview);
-  for(const id of ['userSectorSize','userNameSize','userMaxWidth'])$(id).addEventListener('input',()=>{syncTextControls();updatePreview();});
+  for(const id of ['userSectorSize','userNameSize','userMaxWidth','userTextGap'])$(id).addEventListener('input',()=>{syncTextControls();updatePreview();});
   $('resetTextControls').addEventListener('click',()=>{syncTextControls(true);updatePreview();});
   $('downloadBtn').addEventListener('click',downloadWallpaper);
   $('resetBtn').addEventListener('click',()=>{$('sectorInput').value='Setor';$('nameInput').value='Nome pessoa';selectedThemeId=themes[0].id;syncTextControls(true);refreshThemeList();updatePreview();notify('Exemplo restaurado.');});
@@ -441,7 +452,7 @@ function setupListeners(){
   $('editThemeImage').addEventListener('change',onThemeImageUpload);
   $('saveThemeDraft').addEventListener('click',saveThemeDraft);
   $('publishThemes').addEventListener('click',publishThemes);
-  for(const id of ['editSectorColor','editNameColor','editSectorSize','editNameSize','editX','editY','editMaxWidth','editAlign','editThemeName','editThemeDescription']){
+  for(const id of ['editSectorColor','editNameColor','editSectorSize','editNameSize','editX','editY','editMaxWidth','editTextGap','editAlign','editThemeName','editThemeDescription']){
     $(id).addEventListener('input',()=>{updateSliderLabels();renderAdminPreview();});
   }
 }

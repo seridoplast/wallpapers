@@ -25,6 +25,7 @@
 | Para colaboradores | Para gestores |
 | :--- | :--- |
 | Informar **nome e setor** | Criar, editar e remover temas |
+| Ajustar tamanho das fontes, largura e **distância entre setor e nome** | Definir a distância padrão entre setor e nome para cada tema |
 | Visualizar alterações imediatamente | Enviar novos fundos (PNG/JPG/WebP) |
 | Escolher entre três estilos iniciais | Ajustar posição, alinhamento, tamanho e cor dos textos |
 | Exportar PNG em Full HD, 2K, 4K e mais | Publicar temas no repositório pelo painel |
@@ -108,6 +109,7 @@ wallpapers/
 
 - **100% estático:** sem servidor próprio, banco de dados ou dependências npm.
 - **Canvas API:** gera a prévia e o PNG no próprio navegador.
+- **Distância entre textos:** controle de 0% a 10% da altura da imagem. O gestor define o padrão em cada tema e o colaborador pode ajustá-lo na personalização, com prévia imediata e exportação fiel. Temas antigos sem a propriedade `textGap` mantêm 1,8%, como antes.
 - **Fontes:** Poppins via Google Fonts, com fallback local.
 - **Imagens de temas:** upload convertido para WebP 2048 × 1152 (corte central em outras proporções).
 - **Compatibilidade:** o leitor de temas aceita também campos antigos `roleColor`/`roleSize` e os converte para `sectorColor`/`sectorSize`.

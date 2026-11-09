@@ -6,28 +6,45 @@
       "name": "Institucional",
       "description": "O visual original da Seridóplast",
       "image": "assets/wallpaper-base.png",
-      "sectorColor": "#ffffff",
       "nameColor": "#ffffff",
-      "sectorSize": 95,
       "nameSize": 65,
       "x": 89.5,
       "y": 19,
       "maxWidth": 34,
-      "align": "right"
+      "align": "right",
+      "sectorColor": "#ffffff",
+      "sectorSize": 95,
+      "textGap": 1.8
     },
     {
-      "id": "natal-t99jn",
-      "name": "Natal",
-      "description": "Wallpaper especial de Natal",
-      "image": "assets/themes/natal-t99jn.webp",
-      "sectorColor": "#ffffff",
+      "id": "destaque",
+      "name": "Destaque amarelo",
+      "description": "Setor em amarelo institucional",
+      "image": "assets/wallpaper-base.png",
       "nameColor": "#ffffff",
-      "sectorSize": 90,
-      "nameSize": 56,
+      "nameSize": 63,
       "x": 89.5,
-      "y": 27,
-      "maxWidth": 80,
-      "align": "right"
+      "y": 19,
+      "maxWidth": 34,
+      "align": "right",
+      "sectorColor": "#ffcc00",
+      "sectorSize": 91,
+      "textGap": 1.8
+    },
+    {
+      "id": "executivo",
+      "name": "Executivo",
+      "description": "Composição sóbria e refinada",
+      "image": "assets/wallpaper-base.png",
+      "nameColor": "#ffcc00",
+      "nameSize": 59,
+      "x": 89.5,
+      "y": 19,
+      "maxWidth": 34,
+      "align": "right",
+      "sectorColor": "#ffffff",
+      "sectorSize": 85,
+      "textGap": 1.8
     }
   ]
 }
