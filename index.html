@@ -45,6 +45,12 @@
             <label class="field"><span>Seu setor</span><input id="sectorInput" type="text" maxlength="100" value="Setor" placeholder="Ex.: Comercial" autocomplete="off"><small>Ex.: Comercial, Logística, Financeiro...</small></label>
             <label class="field"><span>Seu nome</span><input id="nameInput" type="text" maxlength="100" value="Nome pessoa" placeholder="Digite seu nome completo" autocomplete="name"></label>
           </div>
+          <div class="personal-controls">
+            <div class="personal-controls-heading"><strong>Ajustes do texto</strong><button type="button" id="resetTextControls" class="text-button">Restaurar ajustes</button></div>
+            <label class="field"><span>Tamanho da fonte do setor</span><input id="userSectorSize" type="range" min="60" max="140" step="5" value="100"><small><span id="userSectorSizeVal">100</span>% do tamanho original</small></label>
+            <label class="field"><span>Tamanho da fonte do nome</span><input id="userNameSize" type="range" min="60" max="140" step="5" value="100"><small><span id="userNameSizeVal">100</span>% do tamanho original</small></label>
+            <label class="field"><span>Largura máxima do texto</span><input id="userMaxWidth" type="range" min="20" max="80" step="1" value="34"><small><span id="userMaxWidthVal">34</span>% da imagem</small></label>
+          </div>
           <div class="inner-divider"></div>
           <div class="section-title theme-header"><span class="step-index">02</span><div><h2>Escolha um tema</h2><p>Um estilo para cada momento.</p></div></div>
           <div class="theme-list" id="themeList" role="radiogroup" aria-label="Tema do wallpaper"><div class="theme-loading">Carregando temas...</div></div>

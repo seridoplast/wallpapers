@@ -21,6 +21,16 @@ let toastTimeout;
 const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
 const clampNumber = (value,min,max,fallback) => Number.isFinite(Number(value)) ? clamp(Number(value),min,max) : fallback;
 const getSelectedTheme = () => themes.find(t=>t.id===selectedThemeId) || themes[0];
+function userTheme(theme){
+  return {...theme,
+    sectorSize:theme.sectorSize*Number($('userSectorSize').value)/100,
+    nameSize:theme.nameSize*Number($('userNameSize').value)/100,
+    maxWidth:Number($('userMaxWidth').value)};
+}
+function syncTextControls(reset=false){
+  if(reset){$('userSectorSize').value=100;$('userNameSize').value=100;$('userMaxWidth').value=getSelectedTheme().maxWidth;}
+  for(const [id,label] of [['userSectorSize','userSectorSizeVal'],['userNameSize','userNameSizeVal'],['userMaxWidth','userMaxWidthVal']])$(label).textContent=$(id).value;
+}
 const imgUrl = theme => theme?.imageData || theme?.image || 'assets/wallpaper-base.png';
 function normalizeTheme(raw){
   if(!raw || typeof raw!=='object') return null;
@@ -135,14 +145,14 @@ async function updatePreview(){
     if(nonce!==previewNonce)return;
     const canvas=$('wallpaperCanvas');
     // One render per state change; guard against fast theme switching.
-    await renderWallpaper(canvas,theme,$('sectorInput').value,$('nameInput').value);
+    await renderWallpaper(canvas,userTheme(theme),$('sectorInput').value,$('nameInput').value);
     $('previewDimensions').textContent=`${source.naturalWidth} × ${source.naturalHeight} · Visualização`;
   }catch(e){notify(e.message);console.error(e);}
 }
 function createThemeCard(theme){
   const btn=document.createElement('button');btn.type='button';btn.className='theme-choice';
   btn.setAttribute('role','radio');btn.setAttribute('aria-checked',String(theme.id===selectedThemeId));
-  btn.setAttribute('aria-label',theme.name);btn.addEventListener('click',()=>{selectedThemeId=theme.id;refreshThemeList();updatePreview();});
+  btn.setAttribute('aria-label',theme.name);btn.addEventListener('click',()=>{selectedThemeId=theme.id;syncTextControls(true);refreshThemeList();updatePreview();});
   const thumb=document.createElement('span');thumb.className='theme-thumb';thumb.style.backgroundImage=`url(${JSON.stringify(imgUrl(theme))})`;
   const text=document.createElement('span');text.className='theme-copy';
   const name=document.createElement('strong');name.textContent=theme.name;
@@ -163,14 +173,14 @@ async function loadPublicThemes(){
     if(items.length)themes=items;
   }catch(e){console.warn('Usando tema local de reserva:',e.message);}
   selectedThemeId=themes[0].id;
-  refreshThemeList();updatePreview();
+  syncTextControls(true);refreshThemeList();updatePreview();
 }
 async function downloadWallpaper(){
   const btn=$('downloadBtn');buttonBusy(btn,true,'Gerando PNG...');
   try{
     const [w,h]=$('resolutionSelect').value.split('x').map(Number);
     const c=document.createElement('canvas');c.width=w;c.height=h;
-    await ensureFonts();await renderWallpaper(c,getSelectedTheme(),$('sectorInput').value,$('nameInput').value);
+    await ensureFonts();await renderWallpaper(c,userTheme(getSelectedTheme()),$('sectorInput').value,$('nameInput').value);
     const blob=await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('Não foi possível gerar o arquivo.')),'image/png'));
     const url=URL.createObjectURL(blob);
     const cleanName=($('nameInput').value||'wallpaper').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase().slice(0,50)||'wallpaper';
@@ -416,8 +426,10 @@ function setupListeners(){
   prefillRepository();
   $('year').textContent=String(new Date().getFullYear());
   for(const id of ['nameInput','sectorInput'])$(id).addEventListener('input',updatePreview);
+  for(const id of ['userSectorSize','userNameSize','userMaxWidth'])$(id).addEventListener('input',()=>{syncTextControls();updatePreview();});
+  $('resetTextControls').addEventListener('click',()=>{syncTextControls(true);updatePreview();});
   $('downloadBtn').addEventListener('click',downloadWallpaper);
-  $('resetBtn').addEventListener('click',()=>{$('sectorInput').value='Setor';$('nameInput').value='Nome pessoa';selectedThemeId=themes[0].id;refreshThemeList();updatePreview();notify('Exemplo restaurado.');});
+  $('resetBtn').addEventListener('click',()=>{$('sectorInput').value='Setor';$('nameInput').value='Nome pessoa';selectedThemeId=themes[0].id;syncTextControls(true);refreshThemeList();updatePreview();notify('Exemplo restaurado.');});
   $('openAdmin').addEventListener('click',openAdmin);
   $('closeAdmin').addEventListener('click',closeAdmin);
   $('adminModal').addEventListener('click',e=>{if(e.target===$('adminModal'))closeAdmin();});
