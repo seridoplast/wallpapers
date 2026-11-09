@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "institucional",
+      "name": "Institucional",
+      "description": "O visual original da Seridóplast",
+      "image": "assets/wallpaper-base.png",
+      "roleColor": "#ffffff",
+      "nameColor": "#ffffff",
+      "roleSize": 95,
+      "nameSize": 65,
+      "x": 89.5,
+      "y": 19,
+      "maxWidth": 34,
+      "align": "right"
+    },
+    {
+      "id": "destaque",
+      "name": "Destaque amarelo",
+      "description": "Cargo em amarelo institucional",
+      "image": "assets/wallpaper-base.png",
+      "roleColor": "#ffcc00",
+      "nameColor": "#ffffff",
+      "roleSize": 91,
+      "nameSize": 63,
+      "x": 89.5,
+      "y": 19,
+      "maxWidth": 34,
+      "align": "right"
+    },
+    {
+      "id": "executivo",
+      "name": "Executivo",
+      "description": "Composição sóbria e refinada",
+      "image": "assets/wallpaper-base.png",
+      "roleColor": "#ffffff",
+      "nameColor": "#ffcc00",
+      "roleSize": 85,
+      "nameSize": 59,
+      "x": 89.5,
+      "y": 19,
+      "maxWidth": 34,
+      "align": "right"
+    }
+  ]
+}

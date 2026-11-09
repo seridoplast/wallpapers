@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141517">
+  <meta name="description" content="Gere wallpapers profissionais personalizados da Seridóplast com seu nome e cargo.">
+  <title>Studio Wallpapers | Seridóplast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Seridóplast Studio, início">
+        <span class="brand-mark" aria-hidden="true">S<span>.</span></span>
+        <span class="brand-text"><strong>Seridó<span>plast</span></strong><small>WALLPAPER STUDIO</small></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="header-helper"><span class="online-dot"></span> Personalize. Visualize. Baixe.</span>
+        <button class="top-admin" id="openAdmin" type="button" title="Acesso administrativo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>Área do gestor</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="heading">
+        <div class="eyebrow"><span class="eyebrow-line"></span> IDENTIDADE VISUAL</div>
+        <h1>Seu espaço de trabalho,<br><span>sua identidade.</span></h1>
+        <p>Crie seu wallpaper personalizado com a identidade da Seridóplast. É simples e fica pronto em segundos.</p>
+      </div>
+
+      <div class="workspace">
+        <aside class="settings-card" aria-label="Personalização do wallpaper">
+          <div class="section-title"><span class="step-index">01</span><div><h2>Personalize</h2><p>Como você quer aparecer?</p></div></div>
+          <div class="form-fields">
+            <label class="field"><span>Seu cargo</span><input id="roleInput" type="text" maxlength="100" value="Cargo" placeholder="Ex.: Analista Comercial" autocomplete="organization-title"><small>Ex.: Supervisor, Analista, Gerente...</small></label>
+            <label class="field"><span>Seu nome</span><input id="nameInput" type="text" maxlength="100" value="Nome pessoa" placeholder="Digite seu nome completo" autocomplete="name"></label>
+          </div>
+          <div class="inner-divider"></div>
+          <div class="section-title theme-header"><span class="step-index">02</span><div><h2>Escolha um tema</h2><p>Um estilo para cada momento.</p></div></div>
+          <div class="theme-list" id="themeList" role="radiogroup" aria-label="Tema do wallpaper"><div class="theme-loading">Carregando temas...</div></div>
+          <div class="inner-divider"></div>
+          <div class="section-title"><span class="step-index">03</span><div><h2>Resolução</h2><p>Escolha o tamanho do arquivo.</p></div></div>
+          <label class="select-wrap" for="resolutionSelect"><span class="sr-only">Resolução de download</span><select id="resolutionSelect"><option value="1920x1080">Full HD · 1920 × 1080</option><option value="2560x1440">Quad HD · 2560 × 1440</option><option value="2048x1152">Original · 2048 × 1152</option><option value="1366x768">Notebook · 1366 × 768</option><option value="3840x2160">4K · 3840 × 2160</option></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
+          <button class="download-btn" id="downloadBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 5-5m-5 5-5-5"/><path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg> Baixar wallpaper em PNG</button>
+          <p class="download-help">Sem marca-d’água adicional • Pronto para sua tela</p>
+        </aside>
+
+        <section class="preview-section" aria-label="Pré-visualização do wallpaper">
+          <div class="preview-topline"><div class="preview-heading"><span class="preview-light"></span><strong>Pré-visualização ao vivo</strong></div><span id="previewDimensions">2048 × 1152</span></div>
+          <div class="preview-stage"><div class="wallpaper-shadow"><canvas id="wallpaperCanvas" width="2048" height="1152" role="img" aria-label="Wallpaper com seu nome e cargo sobre a arte da Seridóplast"></canvas></div></div>
+          <div class="preview-bottom"><div><span class="preview-check">✓</span> <span>Visualização fiel à imagem exportada</span></div><button id="resetBtn" class="text-button" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg> Restaurar exemplo</button></div>
+          <div class="hint-card"><span class="sparkle-icon">✳</span><div><strong>Uma identidade, do seu jeito.</strong><p>Preencha seus dados, escolha um dos temas e salve. O nome e o cargo são ajustados automaticamente para não saírem da área de texto.</p></div></div>
+        </section>
+      </div>
+    </main>
+
+    <footer><span>Seridóplast <strong>•</strong> Acreditamos na força do trabalho!</span><span>Wallpaper Studio <span id="year"></span></span></footer>
+  </div>
+
+  <div class="modal-backdrop" id="adminModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+      <div class="modal-header"><div><span class="modal-eyebrow">PAINEL ADMINISTRATIVO</span><h2 id="adminTitle">Gerenciar temas</h2></div><button id="closeAdmin" class="icon-button" type="button" aria-label="Fechar painel">×</button></div>
+      <div id="adminLogin" class="modal-scroll">
+        <div class="admin-notice"><strong>🔐 Acesso via GitHub</strong><p>Conecte-se usando um token do GitHub com permissão de escrita no seu repositório. Nenhuma senha ou token é salvo no navegador.</p></div>
+        <div class="admin-form">
+          <label class="field"><span>Usuário ou organização do GitHub</span><input id="repoOwner" placeholder="seu-usuario" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>Nome do repositório</span><input id="repoName" placeholder="seridoplast-wallpapers" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>Branch de publicação</span><input id="repoBranch" value="main" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>Token de acesso (fine-grained)</span><input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false"></label>
+          <button class="solid-btn" id="connectGitHub" type="button">Conectar e editar temas</button>
+        </div>
+        <p class="admin-help">O token precisa da permissão <strong>Contents: Read and write</strong> somente neste repositório. <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener noreferrer">Criar token no GitHub ↗</a></p>
+        <div class="manual-tip"><strong>Primeira publicação?</strong><p>Suba os arquivos deste projeto em um repositório e ative o GitHub Pages. Depois use este painel para adicionar novos modelos sem precisar editar código.</p></div>
+      </div>
+      <div id="adminDashboard" class="modal-scroll" hidden>
+        <div class="connected-row"><span class="connected-indicator"></span><span id="connectedLabel">Conectado</span><button id="disconnectGitHub" type="button" class="text-button">Sair</button></div>
+        <div class="admin-toolbar"><h3>Temas publicados e rascunhos</h3><button class="small-solid-btn" id="newTheme" type="button">+ Novo tema</button></div>
+        <div class="admin-theme-list" id="adminThemeList"></div>
+        <div class="admin-editor" id="adminEditor" hidden>
+          <div class="editor-header"><h3 id="editorHeading">Novo tema</h3><button id="cancelThemeEdit" class="text-button" type="button">Cancelar</button></div>
+          <div class="editor-grid">
+            <label class="field"><span>Nome do tema</span><input id="editThemeName" maxlength="48" placeholder="Ex.: Natal corporativo"></label>
+            <label class="field"><span>Descrição</span><input id="editThemeDescription" maxlength="90" placeholder="Ex.: Design de fim de ano"></label>
+            <label class="field full"><span>Imagem de fundo (PNG, JPG ou WebP)</span><input type="file" id="editThemeImage" accept="image/png,image/jpeg,image/webp,image/avif" class="file-input"><small>A imagem será convertida para WebP em 2048 × 1152, idealmente em proporção 16:9. Para manter a logo original, utilize um fundo já com a marca.</small></label>
+            <label class="field"><span>Cor do cargo</span><input id="editRoleColor" type="color" value="#ffffff"></label>
+            <label class="field"><span>Cor do nome</span><input id="editNameColor" type="color" value="#ffffff"></label>
+            <label class="field"><span>Tamanho do cargo</span><input id="editRoleSize" type="range" min="38" max="110" value="95"><small><span id="roleSizeVal">95</span> px (base 2048px)</small></label>
+            <label class="field"><span>Tamanho do nome</span><input id="editNameSize" type="range" min="30" max="88" value="65"><small><span id="nameSizeVal">65</span> px (base 2048px)</small></label>
+            <label class="field"><span>Posição horizontal do texto</span><input id="editX" type="range" min="15" max="90" step="0.5" value="89.5"><small><span id="xVal">89.5</span>% da largura</small></label>
+            <label class="field"><span>Posição vertical do cargo</span><input id="editY" type="range" min="10" max="76" value="19"><small><span id="yVal">19</span>% da altura</small></label>
+            <label class="field"><span>Largura máxima do texto</span><input id="editMaxWidth" type="range" min="20" max="80" value="34"><small><span id="maxWidthVal">34</span>% da largura</small></label>
+            <label class="field"><span>Alinhamento</span><select id="editAlign"><option value="center">Centralizado</option><option value="left">Esquerda</option><option value="right" selected>Direita</option></select></label>
+          </div>
+          <div class="editor-preview"><canvas id="adminPreview" width="800" height="450" aria-label="Prévia das configurações do tema"></canvas></div>
+          <button class="solid-btn" id="saveThemeDraft" type="button">Salvar tema no painel</button>
+        </div>
+        <div class="publish-row"><div><strong>Publicar alterações</strong><p>Atualiza themes.json e as novas imagens diretamente no GitHub Pages.</p></div><button class="solid-btn" id="publishThemes" type="button">Publicar no GitHub</button></div>
+      </div>
+      <div id="adminMessage" class="admin-message" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
